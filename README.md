@@ -7,3 +7,10 @@ given all this information the bot will create a video containing screenshots of
 be the text-to-speech of the reddit post and first ten top comments. 
 
 This is all done using pytube, Selenium, Webdriver-manager, gtts, re and mutagen.
+
+Example:
+
+
+
+https://user-images.githubusercontent.com/42220010/195967719-8396afe6-8277-4b67-9d6a-b6f346a0086c.mp4
+
