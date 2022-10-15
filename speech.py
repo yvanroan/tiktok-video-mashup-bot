@@ -3,9 +3,27 @@
 import re
 from gtts import gTTS
 from get_screenshots import reddit_scrapper
+from mutagen.mp3 import MP3
 
 
 lang='en'
+
+def text_to_mp3(data):
+    speech_per_comment={}
+    i=0
+    length=0
+    for text in data.values():
+        if length>60:
+            break
+        myobj = gTTS( text = sanitize_text(text), lang=lang, slow=False)
+        myobj.save(f"./assets/speeches/welcome{i}.mp3")
+        audio = MP3(f"./assets/speeches/welcome{i}.mp3")
+        length = int(audio.info.length)        
+        speech_per_comment[i]=(length,f"./assets/speeches/welcome{i}.mp3")
+        # print(speech_per_comment.get(i)[0])
+        i+=1
+
+    return speech_per_comment
 
 
 def sanitize_text(text: str) -> str:
@@ -33,22 +51,3 @@ def sanitize_text(text: str) -> str:
     result = result.replace("+", "plus").replace("&", "and")
     # remove extra whitespace
     return " ".join(result.split())
-
-def text_to_mp3(url):
-    texts = reddit_scrapper(url)
-    content=''
-    print(texts)
-    for text in texts.values():
-        content += ' '+ sanitize_text(text)
-    
-    print(content)    
-    myobj = gTTS(text=content, lang=lang, slow=False)
-  
-    # Saving the converted audio in a mp3 file named
-    # welcome 
-    myobj.save("./speeches/welcome.mp3")
-    print("done")
-
-
-# if __name__ == "__main__":
-#     text_to_mp3("https://www.reddit.com/r/learnpython/comments/hly22a/automatically_screenshot_and_save_a_reddit_post/")

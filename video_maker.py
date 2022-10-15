@@ -3,42 +3,44 @@
 #https://stackoverflow.com/questions/72914568/overlay-image-on-video-using-moviepy
 #https://docs.python.org/3/library/multiprocessing.html
 
-import multiprocessing
 from moviepy.video.VideoClip import ImageClip
-from moviepy.video.io.VideoFileClip import VideoFileClip
+from moviepy.editor import VideoFileClip  
+from moviepy.editor import AudioFileClip
 from moviepy.video.compositing.CompositeVideoClip import CompositeVideoClip
 from moviepy.editor import concatenate_videoclips
-from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
 
-number_of_content=4
-m=7
+video_path = './assets/downloaded_videos/base_video_trim.mp4'
 
-def create_video(video):
-    ffmpeg_extract_subclip(video, t1=5, t2=65, targetname="./downloaded_videos/video_1.mp4")# creates a subclip
-
-    video_1 = VideoFileClip("./downloaded_videos/video_1.mp4").without_audio().resize(height=H).crop(x1=1166.6, y1=0, x2=2246.6, y2=1920)
-    n=3
-    image_clips=[]
-    for i in range(number_of_content):
-
-        title = ImageClip(f"./downloaded_screenshot/{i}.png").set_start(n).set_duration(m).set_pos(("center","center"))
-                #.resize(height=50) # if you need to resize...
-        image_clips.append(title)
+def create_video(audios):
+    comments_speech = audios
+    video= VideoFileClip(video_path).without_audio()
+    start_time=0
+    clips=[]
+    for comment_number in range(len(comments_speech)):
+        length = comments_speech.get(comment_number)[0]
+        audio_clip = AudioFileClip(comments_speech.get(comment_number)[1])
         
-        n+=m
+        
+        title = ImageClip(f"./assets/downloaded_screenshot/{comment_number}.png").set_start(0).set_duration(length).set_pos(("center","center"))
+                #.resize(height=50) # if you need to resize...
+        print(start_time,length)    
+        video_clip=video.subclip(start_time,start_time+length)
+        video_clip2=video_clip.set_audio(audio_clip)
+        clips.append(CompositeVideoClip([video_clip2, title]))
+        
+        start_time+=length
+        print(f"{comment_number+1}st done")
 
-    image_concat = concatenate_videoclips(image_clips).set_position("center")
-    final = CompositeVideoClip([video_1, image_concat])
+    final = concatenate_videoclips(clips).set_position("center")
+
     # final = Video(final).add_watermark(
     #     text="ThePaceMaker_yvanroan", opacity=0.4
     #  ) create a video class that will handle watermarks look at utils/video for reference
     final.write_videofile(
-        "./downloaded_videos/test.mp4",
+        "./result/test.mp4",
         fps=30,
         audio_codec="aac",
         audio_bitrate="192k",
         verbose=False,
-        threads=multiprocessing.cpu_count()#Return the number of CPUs in the system.
+        # threads=multiprocessing.cpu_count()#Return the number of CPUs in the system.
     )
-if __name__ == "__main__":
-    create_video("./downloaded_videos/base_video.mp4",)
