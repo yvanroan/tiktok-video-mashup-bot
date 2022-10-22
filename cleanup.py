@@ -2,7 +2,7 @@ import os,time
 from os.path import exists
 
 def cleanup():
-    #Deletes all temporary files in assets
+    #Deletes all temporary files in assets( doesnot clean the background videos at the moment)
 
     # Returns:
     #     int: How many files were deleted
