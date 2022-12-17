@@ -3,9 +3,8 @@ from os.path import exists
 
 def cleanup():
     #Deletes all temporary files in assets( doesnot clean the background videos at the moment)
-
-    # Returns:
-    #     int: How many files were deleted
+    
+    print('Clean up in progress...',end="",flush=True)
     path_screenshots = "./assets/downloaded_screenshot"
     path_videos = "./assets/downloaded_videos"
     path_speeches = "./assets/speeches"

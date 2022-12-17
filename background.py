@@ -34,3 +34,4 @@ def download_yt_videos(url: str):
 # if __name__ == "__main__":
     
 #     download_yt_videos("https://www.youtube.com/watch?v=n_Dv4JMiwK8")https://www.reddit.com/r/csMajors/comments/y3nie5/that_was_fast/
+#https://www.youtube.com/watch?v=qGa9kWREOnE
